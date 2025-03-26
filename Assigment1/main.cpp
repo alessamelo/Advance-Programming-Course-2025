@@ -115,7 +115,7 @@ void write_courses_offered(std::vector<Course>& all_courses) {
     std::vector<int> to_delete_indices;  // Índices de los cursos a eliminar
 
     for (size_t i = 0; i < all_courses.size(); ++i) {
-        if (all_courses[i].quarter != "null:") {  // Condición de cursos ofrecidos
+        if (all_courses[i].quarter != "null") { 
             file << all_courses[i].title << ","
                  << all_courses[i].number_of_units << ","
                  << all_courses[i].quarter << "\n";
@@ -141,6 +141,22 @@ void write_courses_offered(std::vector<Course>& all_courses) {
  */
 void write_courses_not_offered(std::vector<Course> unlisted_courses) {
   /* (STUDENT TODO) Your code goes here... */
+    const std::string COURSES_NOT_OFFERED_PATH = "student_output/courses_not_offered.csv";
+    std::ofstream file(COURSES_NOT_OFFERED_PATH);
+
+    if (!file.is_open()) {
+        std::cerr << "Error: No se pudo abrir " << COURSES_NOT_OFFERED_PATH << std::endl;
+        return;
+    }
+    
+    file << "Title,Units,Quarter\n";
+    
+    for (const Course& course : unlisted_courses) {
+        file << course.title << "," << course.number_of_units << "," << course.quarter << "\n";
+    }
+    file.close();
+}
+
 }
 
 int main() {
