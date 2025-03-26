@@ -27,7 +27,7 @@ const std::string COURSES_NOT_OFFERED_PATH = "student_output/courses_not_offered
 
 struct Course {
     std:: string title;
-    int  number_of_units;
+    std:: string  number_of_units;
     std:: string quarter;
 };
 
@@ -61,6 +61,27 @@ struct Course {
  */
 void parse_csv(std::string filename, std::vector<Course> courses) {
   /* (STUDENT TODO) Your code goes here... */
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error: No se pudo abrir el archivo " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+    std::getline(file, line); 
+
+    while (std::getline(file, line)) {
+        std::vector<std::string> fields = split(line, ','); 
+
+        Course course;
+        course.title = fields[0];
+        course.number_of_units = std::stoi(fields[1]);  // Convertir string a int
+        course.quarter = fields[2];
+
+        courses.push_back(course);
+    }
+
+    file.close();
 }
 
 /**
@@ -81,9 +102,29 @@ void parse_csv(std::string filename, std::vector<Course> courses) {
  * @param all_courses A vector of all courses gotten by calling `parse_csv`.
  *                    This vector will be modified by removing all offered courses.
  */
-void write_courses_offered(std::vector<Course> all_courses) {
-  /* (STUDENT TODO) Your code goes here... */
-}
+void write_courses_offered(std::vector<Course>& all_courses) {
+    std::ofstream file(COURSES_OFFERED_PATH);
+    if (!file.is_open()) {
+        std::cerr << "Error: No se pudo abrir " << COURSES_OFFERED_PATH << std::endl;
+        return;
+    }
+
+    // Escribimos el encabezado del archivo CSV
+    file << "Title,Units,Quarter\n";
+
+    std::vector<int> to_delete_indices;  // Índices de los cursos a eliminar
+
+    for (size_t i = 0; i < all_courses.size(); ++i) {
+        if (all_courses[i].quarter != "null:") {  // Condición de cursos ofrecidos
+            file << all_courses[i].title << ","
+                 << all_courses[i].number_of_units << ","
+                 << all_courses[i].quarter << "\n";
+            to_delete_indices.push_back(i);
+        }
+    }
+
+    file.close();
+    delete_elem_from_vector(all_courses, to_delete_indices); 
 
 /**
  * This function writes the courses NOT offered to the file
