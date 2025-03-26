@@ -1,0 +1,11 @@
+Before submitting this file, make sure that there are no more TODO
+placeholders remaining in the file (and remove this comment too).
+
+Make a Class
+------------
+
+Q1. What’s const-correctness and why is it important?
+A1. Const-correctness is the practice of declaring methods as const when they don't modify the object's state. It's important because it helps prevent accidental modifications, makes code safer, and allows const objects to call these methods.
+
+Q2. Is your class const-correct? How do you know?
+A2. Yes, the class is const-correct. I know because all getter methods (getName(), getHealth(), etc.) are marked as const, and showInfo() which doesn't modify state is also const.
