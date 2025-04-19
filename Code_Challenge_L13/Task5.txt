@@ -1,0 +1,30 @@
+==========================
+Move Semantics - Summary
+===========================
+
+What is Move Semantics?
+
+- Move semantics let us transfer ownership of resources (like memory) instead of copying them.
+- This helps performance, especially with big objects.
+- After moving, the original object is left in a valid but empty or unknown state (like setting pointers to nullptr).
+- Move operations use rvalue references (`&&`) and the function `std::move()`.
+- Mark move constructors and assignments as `noexcept` to work well with STL containers.
+
+---------------------------
+Where It's Useful
+---------------------------
+
+1. Game development - move big textures or models.
+2. High-performance computing - avoid copying large data like matrices.
+3. Networking - move data buffers between functions.
+4. STL containers - used internally in things like `std::vector`.
+5. Managing resources - move file handles or database connections.
+
+---------------------------
+Common Mistakes
+---------------------------
+
+1. Using an object after moving it.
+2. Accidentally moving objects still needed.
+3. Forgetting `noexcept` can cause issues with STL containers.
+4. Moving small objects (like ints) is unnecessary and doesn’t improve performance.

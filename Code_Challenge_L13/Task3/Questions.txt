@@ -1,0 +1,40 @@
+### 1. **What constructors/assignments are called and when?**
+```
+1. Constructor          - Buffer b1(100);
+2. Copy constructor     - Buffer b2 = b1;
+3. Move constructor     - Buffer b3 = std::move(b1);
+4. Constructor          - Buffer b4(50);
+5. Copy assignment      - b4 = b2;
+6. Move assignment      - b4 = std::move(b2);
+```
+
+### 2. **What happens to the source object after a move?**
+- The source object is left in a **valid but empty state**:
+  - Its `data` pointer is set to `nullptr`
+  - Its `size` is set to 0
+- You can still safely:
+  - Call other methods (as long as they don't access the moved data)
+  - Assign new values to it
+  - Let it go out of scope (destructor won't crash)
+- You should NOT:
+  - Access the moved-from data
+  - Assume it contains any original values
+
+### 3. **What if you didn't define move operations?**
+- The compiler would automatically:
+  1. Use **copy operations** instead of move operations
+  2. Result in **deep copies** even for rvalue references (std::move)
+- Performance impact:
+  - Extra memory allocations
+  - Extra data copying
+  - Slower performance with temporary objects
+- Behavior of your test case would change to:
+  ```
+  1. Constructor
+  2. Copy constructor (b2 = b1)
+  3. Copy constructor (b3 = b1)  ← Would copy instead of move
+  4. Constructor
+  5. Copy assignment
+  6. Copy assignment            ← Would copy instead of move
+  ```
+
