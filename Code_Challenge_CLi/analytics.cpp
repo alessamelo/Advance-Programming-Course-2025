@@ -25,13 +25,13 @@ void Analytics::loadData(bool onlyUK) {
         throw std::runtime_error("No se pudo abrir el archivo: " + filename);
     }
 
-    // Obtener tamaño del archivo para el progreso
+    
     file.seekg(0, std::ios::end);
     auto file_size = file.tellg();
     file.seekg(0, std::ios::beg);
 
     std::string line;
-    std::getline(file, line); // Saltar cabecera
+    std::getline(file, line); 
 
     transactions.clear();
     size_t lineCount = 0;
@@ -41,7 +41,7 @@ void Analytics::loadData(bool onlyUK) {
         Transaction t;
         std::string field;
 
-        // Parsear cada campo
+        
         std::getline(ss, t.invoiceNo, ',');
         std::getline(ss, t.stockCode, ',');
         std::getline(ss, t.description, ',');
@@ -88,7 +88,7 @@ void Analytics::analyzeData() const {
     isAnalyzed = true;
 }
 
-// Resto de las funciones permanecen igual...
+
 std::unordered_map<std::string, int> Analytics::getTransactionsByCountry() const {
     analyzeData();
     return countryCounts;
