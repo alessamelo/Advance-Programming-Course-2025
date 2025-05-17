@@ -1,0 +1,51 @@
+# Configuración del compilador
+CXX := g++
+CXXFLAGS := -std=c++17 -Wall -Wextra -Iinclude -Ilib/CLI11/include
+LDFLAGS := 
+TARGET := build/retail_analytics.exe
+
+# Estructura de directorios
+SRC_DIR := src
+INCLUDE_DIR := include
+DATA_DIR := data
+BUILD_DIR := build
+
+# Archivos fuente y objetos
+SRCS := $(SRC_DIR)/main.cpp analytics.cpp
+OBJS := $(patsubst %.cpp,$(BUILD_DIR)/%.o,$(SRCS))
+
+# Regla principal (compilación completa)
+all: $(TARGET) copy_data
+
+# Regla de enlazado
+$(TARGET): $(OBJS)
+	@echo "🔗 Enlazando ejecutable..."
+	@mkdir -p $(@D)
+	@$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
+	@echo "✅ Compilación completada: $(TARGET)"
+
+# Regla para compilar objetos
+$(BUILD_DIR)/%.o: %.cpp
+	@echo "🛠️ Compilando $<..."
+	@mkdir -p $(@D)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Copiar archivos de datos
+copy_data:
+	@echo "📁 Copiando datos..."
+	@mkdir -p $(BUILD_DIR)/$(DATA_DIR)
+	@cp $(DATA_DIR)/Online-Retail.csv $(BUILD_DIR)/$(DATA_DIR)/
+	@echo "📄 Datos copiados a: $(BUILD_DIR)/$(DATA_DIR)/"
+
+# Ejecutar el programa
+run: $(TARGET) copy_data
+	@echo "🚀 Ejecutando programa..."
+	@./$(TARGET)
+
+# Limpieza
+clean:
+	@echo "🧹 Limpiando proyecto..."
+	@rm -rf $(BUILD_DIR)
+	@echo "✨ Proyecto limpio"
+
+.PHONY: all run clean copy_data
